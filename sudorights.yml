@@ -1,6 +1,6 @@
 # This script will cvreate sudo users along with passwordless authenciation
 ---
-- hosts: localhost
+- hosts: linux_host
   become: yes
   connection: ssh
   tasks:
@@ -16,8 +16,9 @@
            ansible.builtin.lineinfile:
               path: /etc/sudoers
               state: present
-              insertafter: "root    ALL=(ALL)       ALL"
-              line: "{{ item }}    ALL=(ALL)       ALL"
+              firstmatch: yes
+              line: "{{ item }} ALL=(ALL) ALL"
+              insertafter: "^root ALL=(ALL) ALL"
               validate: /usr/sbin/visudo -cf %s
            with_items:
              - test1
